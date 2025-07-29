@@ -29,7 +29,8 @@ header {
 
 #subsection1,
 #subsection2,
-#subsection3 {
+#subsection3,
+#subsection4 {
   display: none;
 }
 
@@ -37,6 +38,10 @@ header {
 #subsection2.canShowSection,
 #subsection3.canShowSection {
   display: block;
+}
+
+#subsection4.canShowSection {
+  display: flex;
 }
 
 .parallax {
@@ -813,6 +818,33 @@ ul {
 
 .victory {
   display: none;
+}
+
+.footer {
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer h2 {
+  width: 49%;
+  color: white;
+  text-align: center;
+}
+
+.footer img {
+  width: 50%;
+  height: 100%;
+}
+
+.footer div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 80%;
 }
 
 @media (max-width: 800px) {

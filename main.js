@@ -1,6 +1,5 @@
 /* jshint esversion: 6 */
 
-
 const heightOutput = document.querySelector("#height");
 const widthOutput = document.querySelector("#width");
 function reportWindowSize() {
@@ -978,8 +977,8 @@ function won(obj) {
 animate();
 
 //when dragging resize bar in inspect browser mode
-window.onresize = function () {
-  location.reload();
-};
+//window.onresize = function () {
+//  location.reload();
+//};
 
 //#endregion

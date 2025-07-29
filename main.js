@@ -1,3 +1,6 @@
+/* jshint esversion: 6 */
+
+
 //#region glitchText
 const resolver = {
   resolve: function resolve(options, callback) {
@@ -7,15 +10,14 @@ const resolver = {
 
     function getRandomInteger(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
-    };
+    }
 
     function randomCharacter(characters) {
       return characters[getRandomInteger(0, characters.length - 1)];
-    };
+    }
 
     function doRandomiserEffect(options, callback) {
       const characters = options.characters;
-      const timeout = options.timeout;
       const element = options.element;
       const partialString = options.partialString;
 
@@ -33,16 +35,15 @@ const resolver = {
             element.textContent = partialString.substring(0, partialString.length - 1) + randomCharacter(characters);
           }
 
-          doRandomiserEffect(nextOptions, callback)
+          doRandomiserEffect(nextOptions, callback);
         } else if (typeof callback === "function") {
           callback();
         }
       }, options.timeout);
-    };
+    }
 
     function doResolverEffect(options, callback) {
       const resolveString = options.resolveString;
-      const characters = options.characters;
       const offset = options.offset;
       const partialString = resolveString.substring(0, offset);
       const combinedOptions = Object.assign({}, options, { partialString: partialString });
@@ -58,11 +59,11 @@ const resolver = {
           }
         }
       });
-    };
+    }
 
     doResolverEffect(combinedOptions, callback);
   }
-}
+};
 
 /* Some GLaDOS quotes from Portal 2 chapter 9: The Part Where He Kills You
  * Source: http://theportalwiki.com/wiki/GLaDOS_voice_lines#Chapter_9:_The_Part_Where_He_Kills_You
@@ -89,9 +90,7 @@ const options = {
   resolveString: strings[counter],
   // The element
   element: document.querySelector('[data-target-resolver]')
-
-
-}
+};
 
 // Callback function when resolve completes
 function callback() {
@@ -158,11 +157,11 @@ const observer = new IntersectionObserver(
         //responsive for mobile
         if (window.innerWidth > 800) {
           //find all elements that need typing effect and call them
-          if (entry.target.hasAttribute('typer')) {
+          if (entry.target.hasAttribute('data-typer')) {
             const typeroptions = {
               timeout: 70,
               typerElement: entry.target,
-              resolveString: entry.target.getAttribute('typer')
+              resolveString: entry.target.getAttribute('data-typer')
             };
             typerResolver.resolve(typeroptions);
           }
@@ -174,149 +173,72 @@ const observer = new IntersectionObserver(
         entry.target.classList.remove('visible');
         entry.target.classList.add('not-visible');
       }
-    })
+    });
   },
   {
     rootMargin: "0px",
     threshold: [0, 0, 1, 1],
-  },
-)
+  }
+);
 
 const tags = document.querySelectorAll('.fade-in');
 
 tags.forEach((tag) => {
-  observer.observe(tag)
-})
-//#endregion
-
-//#region smooth scrolling
-
-let canScroll = true;
-var offsetY = 0;
-var speedY = 0;
-const deltaMultiplier = 10;
-const maxSpeed = 160;
-const friction = 0.95;
-
-function scrollVertically(ev) {
-  ev.preventDefault()
-  var delta = -1 * Math.sign(ev.wheelDelta);
-  speedY += delta * deltaMultiplier;
-  speedY = speedY > 0 ? Math.min(speedY, maxSpeed) : Math.max(speedY, -maxSpeed);
-  return false;
-}
-
-function draw() {
-  offsetY += speedY;
-
-  const element = document.documentElement;
-  const maxScrollLeft = element.scrollHeight - element.clientHeight;
-  offsetY = Math.min(offsetY, maxScrollLeft);
-  offsetY = Math.max(offsetY, 0);
-
-  element.scrollTop = offsetY;
-  speedY *= friction;
-
-  //if(canScroll){
-  // about 60 times a second
-  requestAnimationFrame(draw);//}
-}
-
-// must be passive so will be cancelable
-addEventListener('wheel', scrollVertically, {
-  passive: false
-})
-
-draw();
-
-//#region menu buttons to work
-const menuButtons = document.getElementsByClassName("menuBtn");
-let smoothscroll = true;
-for (const btn of menuButtons) {
-  btn.addEventListener("click", () => {
-    let ref = 0;
-
-    //so many if else is for both mobile and desktop
-    if (btn === menuButtons[0]) {
-      ref = "#sub1";
-    } else if (btn === menuButtons[1]) {
-      ref = "#sub2";
-    } else if (btn === menuButtons[2]) {
-      ref = "#Home";
-    } else if (btn === menuButtons[3]) {
-      ref = "#sub3";
-    } else if (btn === menuButtons[4]) {
-      ref = "#sub4";
-    }
-    else if (btn === menuButtons[5]) {
-      ref = "#Home";
-    } else if (btn === menuButtons[6]) {
-      ref = "#sub1";
-    } else if (btn === menuButtons[7]) {
-      ref = "#sub2";
-    } else if (btn === menuButtons[8]) {
-      ref = "#sub3";
-    } else if (btn === menuButtons[9]) {
-      ref = "#sub4";
-    }
-
-    let target = document.querySelector(ref);
-    let targetTop = target.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo(window.scrollX, targetTop);
-    offsetY = targetTop;
-  })
-}
-//#endregion
+  observer.observe(tag);
+});
 //#endregion
 
 //#region bunch o button click events
-const hamburger = document.querySelector("#hamburger>div")
+const hamburger = document.querySelector("#hamburger>div");
 const hamburgermenu = document.querySelector("#hamburgerMenu");
 hamburger.addEventListener('click', () => {
   hamburger.classList.toggle('active');
   hamburgermenu.classList.toggle('active');
-})
+});
 
-const hamburgerBtns = document.getElementsByClassName("menuBtn");
+const hamburgerBtns = document.getElementsByClassName("hamMenuBtn");
 
 for (let i = 5; i < hamburgerBtns.length; i++) {
-  let hamburgerBtnsParent = hamburgerBtns[i].parentElement;
+  const button = hamburgerBtns[i];
   hamburgerBtns[i].addEventListener('click', () => {
     var current = document.querySelectorAll("#hamburgerMenu nav li.active");
     if (current.length > 0) {
       current[0].classList.remove("active");
     }
-    hamburgerBtnsParent.classList.add("active");
-  })
+    button.parentElement.classList.add("active");
+  });
 }
 
 const sub2Btns = document.getElementsByClassName("sub2Btn");
 const sub2Cnt = document.getElementsByClassName("sub2Content");
 
 for (let i = 0; i < sub2Btns.length; i++) {
-  sub2Btns[i].addEventListener('click', () => {
-    var current = document.getElementsByClassName("sub2Btn active");
-    var currentCnt = document.querySelectorAll(".sub2Content.sub2Show");
+  const btn = sub2Btns[i];
+  const cnt = sub2Cnt[i];
+
+  btn.addEventListener('click', () => {
+    const current = document.getElementsByClassName("sub2Btn active");
+    const currentCnt = document.querySelectorAll(".sub2Content.sub2Show");
+
     if (current.length > 0) {
       currentCnt[0].classList.remove("sub2Show");
       current[0].classList.remove("active");
     }
-    sub2Btns[i].classList.add("active");
-    sub2Cnt[i].classList.add('sub2Show')
-  })
+
+    btn.classList.add("active");
+    cnt.classList.add("sub2Show");
+  });
 }
 
 const imageGalleryBtns = document.getElementsByClassName("showMoreBtn");
 const imageGalleryOverlay = document.getElementsByClassName("sub2Overlay");
 for (let i = 0; i < imageGalleryBtns.length; i++) {
-  imageGalleryBtns[i].addEventListener('click', () => {
+  const btn = imageGalleryBtns[i];
+  const overlay = imageGalleryOverlay[i];
 
-    imageGalleryOverlay[i].classList.add('sub2Show');
-    canScroll = !canScroll;
-    if (canScroll) {
-      //draw();
-    }
-  })
+  btn.addEventListener('click', () => {
+    overlay.classList.add('sub2Show');
+  });
 }
 
 const exitBtn = document.getElementsByClassName("exitBtn");
@@ -326,24 +248,59 @@ for (let i = 0; i < exitBtn.length; i++) {
     if (current.length > 0) {
       current[0].classList.remove("sub2Show");
     }
-  })
+  });
 }
 
-const startBtn = document.querySelector("#startButton")
+const startBtn = document.querySelector("#startButton");
 const startScreen = document.querySelector("#gameCover");
 let currentOpacity = parseFloat(startScreen.style.opacity) || 1;
 let gameStarted = false;
+let gameWon = false;
+let clawActive = false;
 startBtn.addEventListener('click', () => {
   startScreen.classList.add('started');
+});
 
-})
+// Get the parent container of all the navigation buttons
+document.querySelector('#fakeMenu').addEventListener('click', function (event) {
+  // Prevent the default anchor behavior (scrolling to the section)
+  event.preventDefault();
+  var current = document.querySelectorAll('.topicss.canShowSection');
+  if (current.length > 0) {
+    current[0].classList.remove('canShowSection');
+  }
+  // Find the section with the corresponding id
+  const section = document.querySelector(event.target.getAttribute('href'));
+  if (section) {
+    // Add a class to make the section visible
+    section.classList.add("canShowSection");
+  }
+
+});
+
+// Get the parent container of all the navigation buttons
+document.querySelector('#hamburgerMenu').addEventListener('click', function (event) {
+  // Prevent the default anchor behavior (scrolling to the section)
+  event.preventDefault();
+  var current = document.querySelectorAll('.topicss.canShowSection');
+  if (current.length > 0) {
+    current[0].classList.remove('canShowSection');
+  }
+  // Find the section with the corresponding id
+  const section = document.querySelector(event.target.getAttribute('href'));
+  if (section) {
+    // Add a class to make the section visible
+    section.classList.add("canShowSection");
+  }
+
+});
 //#endregion
 
 //#region history image changer (scroll Event)
 const historyContent = document.getElementsByClassName("historyLayout");
-const parallaxContent = document.querySelectorAll('section .parallax');
+const parallaxContent = document.querySelectorAll('#parallaxfinder .parallax');
 window.addEventListener('scroll', () => {
-  const scrollEnd = 1000;
+  const scrollEnd = 750; //750 for game
   let scrollY = window.scrollY;
   let progress = (scrollY / scrollEnd); //scrolled divided by range
   progress = Math.max(0, Math.min(progress, 1));
@@ -355,15 +312,19 @@ window.addEventListener('scroll', () => {
   }
   else {
     yRange = 236;
-    yThreshold = 150;
+    yThreshold = 0;
   }
+  let screenHeight = window.innerHeight;
+  yRange = 0.4983 * screenHeight - 202.4;
+  yThreshold = -0.3344 * screenHeight + 1325;
+
   const logoText = document.querySelector('.bannerText');
   const logo = document.querySelector('#bannerDrawing');
-  const menulogo = document.querySelector('#topMenu li:nth-of-type(3) a')
+  const menulogo = document.querySelector('#topMenu li:nth-of-type(3) a');
   logo.style.transform = "translateY(-" + (progress * yRange) + "px)";
   //279
   let scaleX = 1 - 0.75 * progress;
-  let scaleY = 1 - 0.75 * progress
+  let scaleY = 1 - 0.75 * progress;
   logo.style.transform += "scale(-" + (scaleX) + "," + (scaleY) + ")";
 
   logoText.style.opacity = 1 - (progress * 2.5);
@@ -371,12 +332,22 @@ window.addEventListener('scroll', () => {
   const prehistoricContainer = historyContent[0];
   const containerMiddle = (prehistoricContainer.getBoundingClientRect().top - prehistoricContainer.getBoundingClientRect().bottom) / 2;
   const containerHalf = prehistoricContainer.getBoundingClientRect().top - containerMiddle;
-  if (containerHalf <= window.innerHeight / 2 + yThreshold) {
 
+  let threshold = 1.1;
+  var current = document.querySelectorAll('.topicss.canShowSection');
     const mainCover = document.getElementById("banner");
-    mainCover.style.position = "absolute";
     const fakeImg = document.querySelector('#Home > img');
+  if(progress >= 1)
+  {
+    mainCover.style.position = "absolute";
     fakeImg.style.display = "block";
+  }
+  else{
+
+        mainCover.style.position = "fixed";
+        fakeImg.style.display = "none";
+  }
+  if (containerHalf <= (window.innerHeight / 2) * threshold) {
 
     for (const content of historyContent) {
       content.style.position = "fixed";
@@ -384,24 +355,21 @@ window.addEventListener('scroll', () => {
       content.style.left = "0";
       content.style.right = "0";
       content.style.bottom = "0";
-      if ((scrollY - containerHalf - 1000) <= window.innerHeight / 2) {
+      if ((scrollY - containerHalf - yThreshold) <= window.innerHeight / 2) {
         content.style.position = "absolute";
-        mainCover.style.position = "fixed";
-        fakeImg.style.display = "none";
       }
     }
   }
   cuttingImages();
+  console.log(cutcounter);
 }
 );
 
 let cutcounter = 0;
 function cuttingImages() {
   let section1 = historyContent[cutcounter];
-
   let parallax2 = parallaxContent[cutcounter + 1];
   let section2 = historyContent[cutcounter + 1];
-  console.log(cutcounter);
   if (cutcounter >= historyContent.length - 1) {
     section1 = historyContent[cutcounter];
     parallax2 = document.getElementById("sub2");
@@ -413,7 +381,7 @@ function cuttingImages() {
   progress = Math.max(0, Math.min(1, progress));
   section1.style.clipPath = 'inset(0 0 ' + (100 - progress * 100) + '% 0)';
   section2.style.clipPath = 'inset(' + (progress * 100) + '% 0 0 0)';
-  if (progress === 0 && cutcounter >= 0 && cutcounter < 2) {
+  if (progress === 0 && cutcounter >= 0 && cutcounter < 1) {
     cutcounter++;
   }
   if (progress === 1 && (cutcounter === 1 || cutcounter === 2)) {
@@ -425,7 +393,7 @@ function cuttingImages() {
 
 //#region simpler typing effect
 const typerResolver = {
-  resolve: function (options, callback) {
+  resolve: function (options) {
     const { resolveString, typerElement, timeout } = options;
     let offset = 0;
     let called = false;
@@ -463,32 +431,45 @@ const stupidChild = stupidContainer.querySelector("#sub2Container");
 const resizeObserver = new ResizeObserver(() => {
   stupidContainer.style.height = (stupidChild.getBoundingClientRect().height + 80) + "px";
 });
-
 resizeObserver.observe(stupidChild);
 //#endregion
 
-//region game
-const clawXsize = 160;
-const clawYsize = 150;
-const screen = document.querySelector("#gameScreen");
+//#region game
 
-let targetX = 0, targetY = 0;         // target position
+let targetX = 0, targetY = 0;// target position
 let Xspeed = 3;
-let Yspeed = 0.8;
+let Yspeed = 0.9;
 
-
+const radios = document.querySelectorAll('input[name="difficulty"]');
+let difficulty = 'Medium'; // default difficulty
+radios.forEach(radio => {
+  radio.addEventListener('change', () => {
+    difficulty = document.querySelector(`label[for="${radio.id}"]`).textContent;
+    console.log(`Difficulty set to: ${difficulty}`);
+    startScreen.style.opacity = 1;
+    startScreen.style.display = 'flex';
+    currentOpacity = parseFloat(startScreen.style.opacity) || 1;
+    gameStarted = false;
+    grabbableObjs.forEach(obj => {
+      obj.element.remove(); // Remove the element from the DOM
+    });
+    grabbableObjs.length = 0; // Clear grabbable objects
+    clearInterval(spawnInterval);
+    spawnInterval = null;
+  });
+});
 
 class box {
   constructor(x, y, width, height, element = null) {
+    this.element = element;
     this.x = x;
     this.y = y;
     this.width = width;
     this.height = height;
     this.velocityX = 0;
     this.velocityY = 0;
-    this.gravity = 0.0;
+    this.gravity = 0.05;
     this.isFalling = false;
-    this.element = element;
   }
 
   updatePosition() {
@@ -498,18 +479,39 @@ class box {
     }
   }
 }
-const test = new box(400, 0, 160, 150, document.querySelector('.testDrop'))
-const testBox = new box(300, 350, 50, 150, document.querySelector('.testBox'))
-const claw = new box(0, 0, 160, 150, document.querySelector("#claw"))
-const floor = new box(0, 504, 845, 5, document.querySelector(".floor"))
+const Gscreen = document.querySelector("#gameScreen");
+const screenWidth = Gscreen.getBoundingClientRect().width;
+const screenHeight = Gscreen.getBoundingClientRect().height;
+const objSpace = document.querySelector(".Objects");
+const claw = new box(0, 0, document.querySelector("#claw").getBoundingClientRect().width, document.querySelector("#claw").getBoundingClientRect().height, document.querySelector("#claw"));
+const floor = new box(0, Gscreen.getBoundingClientRect().height, Gscreen.getBoundingClientRect().width, 50, document.querySelector(".floor"));
+const ceiling = new box(0, -50, Gscreen.getBoundingClientRect().width, 50, document.querySelector(".floor"));
+const leftWall = new box(-20, 0, 20, Gscreen.getBoundingClientRect().height, document.querySelector(".floor"));
+const rightWall = new box(Gscreen.getBoundingClientRect().width, 0, 20, Gscreen.getBoundingClientRect().height, document.querySelector(".floor"));
+const pitFloor = new box(screenWidth - document.querySelector("#pitFloor").getBoundingClientRect().width, screenHeight - document.querySelector("#pitFloor").getBoundingClientRect().height, document.querySelector("#pitFloor").getBoundingClientRect().width, document.querySelector("#pitFloor").getBoundingClientRect().height, document.querySelector("#pitFloor"));
+const pitPillar = new box(screenWidth * 0.262, screenHeight - document.querySelector("#pitPillar").getBoundingClientRect().height, document.querySelector("#pitPillar").getBoundingClientRect().width, document.querySelector("#pitPillar").getBoundingClientRect().height, document.querySelector("#pitPillar"));
 
-const allObjs = [test, testBox, claw, floor];
+var id = 0;
+const allObjs = [claw, floor, pitFloor, pitPillar];
+const grabbableObjs = [];
+
+allObjs.forEach(obj => {
+obj.updatePosition();
+})
+const gameArea = document.querySelectorAll(".topicss");
+gameArea[2].id = "subsection3";
 
 let AABBoverlapX = 0;
 let AABBoverlapY = 0;
 let isGrabbed = false;
+let grabbedObj = null;
+let isGrabbing = false;
+let interceptedObj = null;
 let yOffset = 0;
 let xOffset = 0;
+
+//store the interval spawn thing
+let spawnInterval = null;
 
 function AABB(objA, objB) {
   if (objA.x + objA.width < objB.x || objB.x + objB.width < objA.x) {
@@ -518,8 +520,8 @@ function AABB(objA, objB) {
   if (objA.y + objA.height < objB.y || objB.y + objB.height < objA.y) {
     return false;
   }
-  //AABBoverlapX = Math.min(objA.x + objA.width, objB.x + objB.width) - Math.max(objA.x, objB.x);
-  //AABBoverlapY = Math.min(objA.y + objA.height, objB.y + objB.height) - Math.max(objA.y, objB.y);
+  AABBoverlapX = Math.min(objA.x + objA.width, objB.x + objB.width) - Math.max(objA.x, objB.x);
+  AABBoverlapY = Math.min(objA.y + objA.height, objB.y + objB.height) - Math.max(objA.y, objB.y);
   //console.log(AABBoverlapX);
   return true;
 }
@@ -527,72 +529,151 @@ function resolveAABB(objA, objB) {
   const overlapX = Math.min(objA.x + objA.width, objB.x + objB.width) - Math.max(objA.x, objB.x);
   const overlapY = Math.min(objA.y + objA.height, objB.y + objB.height) - Math.max(objA.y, objB.y);
 
-  if (overlapX < overlapY) {
-    if (objA.x < objB.x) {
-      objA.x -= overlapX;
-    }
-    else {
-      objA.x += overlapX;
-    }
-  }
-  else {
-    if (objA.y < objB.y) {
-      objA.y -= overlapY;
-      objA.velocityY = -objA.velocityY * 0.9;
-    }
-    else {
-      objA.y += overlapY;
-      objA.velocityY = -objA.velocityY * 0.9;
+  // Only resolve if overlapping
+  if (overlapX > 0 && overlapY > 0) {
+    if (overlapX < overlapY) {
+
+      // Resolve along X axis
+      if (objA.x < objB.x) {
+        objA.x -= overlapX;
+      } else {
+        objA.x += overlapX;
+      }
+    } else {
+      // Resolve along Y axis
+      if (objA.y < objB.y) {
+        objA.y -= overlapY;
+        objA.velocityY = -objA.velocityY * 0.75; // bounce effect
+      } else {
+        objA.y += overlapY;
+        objA.velocityY = -objA.velocityY * 0.75; // bounce effect
+      }
     }
   }
 }
 
 // Update loop using requestAnimationFrame
 function animate() {
-  // Lerp: move current position toward target
-  const xresult = moveToward(claw.x, targetX, Xspeed);
-  const yresult = moveToward(claw.y, targetY, Yspeed);
-  claw.x = xresult;
-  claw.y = yresult;
-  test.velocityY += test.gravity;
-  test.y += test.velocityY;
-  if (isGrabbed) {
-    testBox.x = claw.x + xOffset;
-    testBox.y = claw.y + yOffset;
+  if (gameStarted) {
+    grabbableObjs.sort((a, b) => a.y - b.y); //sort by y position so collision works properly
+
+    //actual claw movement
+    const xresult = moveToward(claw.x, targetX, Xspeed);
+    const yresult = moveToward(claw.y, targetY, Yspeed);
+    claw.x = xresult;
+    claw.y = yresult;
+
+    //if is grabbed follow claw
+    if (isGrabbed) {
+      grabbedObj.x = claw.x + xOffset;
+      grabbedObj.y = claw.y + yOffset;
+    }
+
+    //apply gravity to grabbable objects
+    for (let i = 0; i < grabbableObjs.length; i++) {
+      const obj = grabbableObjs[i];
+      obj.velocityY += obj.gravity;
+      obj.y += obj.velocityY;
+    }
+
+    //grabbable objects collide with each other
+    for (let i = 0; i < grabbableObjs.length; i++) {
+      for (let j = i + 1; j < grabbableObjs.length; j++) {
+        const objA = grabbableObjs[i];
+        const objB = grabbableObjs[j];
+
+        if (AABB(objA, objB)) {
+          resolveAABB(objA, objB);
+        }
+        objA.updatePosition();
+        objB.updatePosition();
+      }
+    }
+
+    //check if there is anything to grab before max
+    if (isGrabbing) {
+      for (const obj of grabbableObjs) {
+        if (AABB(claw, obj)) {
+          if (AABBoverlapY > obj.height / 2) {
+            if (Math.abs((obj.x + obj.width / 2) - (claw.x + claw.width / 2)) < 30) {
+              interceptedObj = obj;
+              targetY = interceptedObj.y - claw.height / 2;
+            }
+          }
+        }
+      }
+    }
+
+    grabbableObjs.forEach(obj => {
+      if (typeof obj.updatePosition === 'function') {
+        if (obj != floor) {
+          if (AABB(obj, floor)) {
+            if (gameWon === false) {
+              won(obj);
+            }
+            gameWon = true;
+          }
+        }
+      }
+    });
   }
-  testBox.velocityY += testBox.gravity;
-  testBox.y += testBox.velocityY;
 
-
+  //collide everything with floor
   allObjs.forEach(obj => {
     if (typeof obj.updatePosition === 'function') {
-      obj.updatePosition();
       if (obj != floor) {
         if (AABB(obj, floor)) {
           resolveAABB(obj, floor);
         }
       }
+      if (obj != pitFloor) {
+        if (AABB(obj, pitFloor)) {
+          resolveAABB(obj, pitFloor);
+        }
+      }
+      if (obj != ceiling && obj != claw) {
+        if (AABB(obj, ceiling)) {
+          resolveAABB(obj, ceiling);
+        }
+      }
+      if (obj != leftWall && obj != claw) {
+        if (AABB(obj, leftWall)) {
+          resolveAABB(obj, leftWall);
+        }
+      }
+      if (obj != rightWall && obj != claw) {
+        if (AABB(obj, rightWall)) {
+          resolveAABB(obj, rightWall);
+        }
+      }
+      if (obj != pitPillar) {
+        if (AABB(obj, pitPillar)) {
+          resolveAABB(obj, pitPillar);
+        }
+      }
+      obj.updatePosition();
     }
   });
   Constraint();
-  //AABB(claw,testBox);
-  if (AABB(test, testBox)) {
-    resolveAABB(test, testBox);
-  }
-  AABB(claw, testBox);
+
 
   //#region startscreen
   if (startScreen.classList.contains('started')) {
-    console.log("works");
     setTimeout(() => {
       currentOpacity = moveToward(currentOpacity, 0, 0.005); // Adjust speed if needed
       startScreen.style.opacity = currentOpacity;
       if (startScreen.style.opacity <= 0.05) {
         startScreen.classList.remove('started');
+        startScreen.style.display = 'none';
         gameStarted = true;
+        if (spawnInterval == null) {
+          //call it once the moment game starts then interval it
+          Spawn();
+          spawnInterval = setInterval(Spawn, 7000);
+        }
       }
     },
-      250)
+      250);
   }
   //#endregion 
 
@@ -624,24 +705,28 @@ function MovePos(leftInc, topInc) {
 }
 
 function ActivateClaw() {
-  targetY = 250;
+  clawActive = true;
+  targetY = 500;
 
   claw.element.classList.remove('clawUnactive');
   void claw.element.offsetWidth; // force reflow to restart animation
   claw.element.classList.add('clawActivate');
-
+  isGrabbing = true;
   setTimeout(() => {
+    isGrabbing = false;
     claw.element.classList.remove('clawActivate');
     void claw.element.offsetWidth; // force restart again
     claw.element.classList.add('clawGrip');
     setTimeout(() => {
       targetY = 0;
-      if (AABB(testBox, claw)) {
-        if (Math.abs((testBox.x + testBox.width / 2) - (claw.x + claw.width / 2)) < 30) {
-          isGrabbed = true;
-          yOffset = testBox.y - claw.y;
-          xOffset = testBox.x - claw.x;
-          testBox.gravity = 0.05;
+      for (const obj of grabbableObjs) {
+        if (AABB(obj, claw)) {
+          if (Math.abs((obj.x + obj.width / 2) - (claw.x + claw.width / 2)) < 30) {
+            isGrabbed = true;
+            yOffset = obj.y - claw.y;
+            xOffset = obj.x - claw.x;
+            grabbedObj = obj;
+          }
         }
       }
       setTimeout(() => {
@@ -652,31 +737,32 @@ function ActivateClaw() {
           claw.element.classList.add('clawOpen');
           if (isGrabbed) {
             isGrabbed = false;
-            testBox.velocityY = 0;
-            testBox.gravity = 0.05;
+            grabbedObj.velocityY = 0;
           }
           setTimeout(() => {
+            clawActive = false;
             claw.element.classList.remove('clawOpen');
             void claw.element.offsetWidth;
             claw.element.classList.add('clawUnactive');
-          }, 1000)
+          }, 1000);
         },
-          1000)
+          1000);
       },
-        2500)
+        2500);
     },
-      1500)
-  }, 2000);
+      1500);
+  }, 3000);
 }
 
 document.addEventListener('keydown', (e) => {
+  if (!gameStarted) return; // Ignore key events if game hasn't started
+  if (clawActive) return;
   switch (e.code) {
     case "ArrowRight":
       MovePos(10, 0);
       break;
     case "ArrowLeft":
       MovePos(-10, 0);
-      test.gravity = 0.05;
       break;
     case "ArrowUp":
       //test.y -= 100;
@@ -686,8 +772,12 @@ document.addEventListener('keydown', (e) => {
       //test.y -= 100;
       MovePos(0, 10);
       break;
+    case "KeyE":
+      Spawn();
+      break;
   }
 });
+
 ["buttons1", "buttons2", "buttons3"].forEach((className, index) => {
   document.querySelector(`.${className}`).addEventListener("click", () => {
     if (index === 0) {
@@ -705,16 +795,184 @@ document.addEventListener('keydown', (e) => {
 // constraints to keep claw within bounds
 function Constraint() {
   let minX = 0;
-  let maxX = screen.getBoundingClientRect().width - clawXsize;
+  let maxX = Gscreen.getBoundingClientRect().width - claw.width;
   let minY = 0;
-  let maxY = screen.getBoundingClientRect().height - clawYsize;
+  let maxY = Gscreen.getBoundingClientRect().height - claw.height;
 
   targetX = Math.min(Math.max(targetX, minX), maxX);
   targetY = Math.min(Math.max(targetY, minY), maxY);
 }
 
+const figureNames = [
+  "Iron Knight",
+  "Shadow Warrior",
+  "Mystic Mage",
+  "Golden Guardian",
+  "Fireblade Assassin",
+  "Silver Ranger",
+  "Storm Bringer",
+  "Lunar Hunter",
+  "Crystal Sorcerer",
+  "Dark Valkyrie"
+];
+
+function Spawn() {
+  //create new div and randomise it based on difficulty
+  var newDiv = document.createElement('div');
+  newDiv.id = 'new-id-' + (id++); //increment id
+  let range = 0;
+  let rangeEnd = 0;
+  if (difficulty === 'Easy') {
+    console.log(difficulty);
+    range = screenWidth * 0.07;
+    rangeEnd = screenWidth * 0.08;
+  }
+  else if (difficulty === 'Medium') {
+    console.log(difficulty);
+    range = screenWidth * 0.05;
+    rangeEnd = screenWidth * 0.06;
+  }
+  else if (difficulty === 'Hard') {
+    console.log(difficulty);
+    range = screenWidth * 0.03;
+    rangeEnd = screenWidth * 0.04;
+  }
+  let randomX = Math.random() * (rangeEnd - range) + range;
+  let randomY = Math.random() * (rangeEnd - range) + range;
+  newDiv.style.width = randomX + 'px';
+  newDiv.style.height = randomY + 'px';
+  newDiv.style.position = 'absolute';
+  newDiv.style.pointerEvents = 'auto';
+
+  //create image for the object
+  var newImg = document.createElement('img');
+  const crateIndex = Math.floor(Math.random() * 3) + 1; // 1 to 3
+  newImg.src = `Images/crate${crateIndex}.png`;
+  newImg.style.width = '100%';
+  newImg.style.height = '100%';
+  newImg.style.pointerEvents = 'none';
+  newDiv.appendChild(newImg);
+
+  //spawn it at a random location within the pit
+  const widthRange = 0.3;
+  const widthEnd = 0.9;
+  let randomWidth = Math.random() * (widthEnd - widthRange) + widthRange;
+  const newBox = new box(screenWidth * randomWidth, 0, randomX, randomY, newDiv);
+
+  //#region creating overlay for item
+  //create overlay for the item
+  var newOverlay = document.createElement('div');
+  newOverlay.classList.add("itemOverlay");
+  newOverlay.id = 'overlay-' + newDiv.id;
+  document.body.appendChild(newOverlay);
+
+  //create content space for overlay
+  var itemContent = document.createElement('div');
+  itemContent.classList.add('itemContent');
+  newOverlay.appendChild(itemContent);
+
+  //create hidden victory text
+  var victoryText = document.createElement('h1');
+  victoryText.innerHTML = "Congratulations You Won A Prize!";
+  victoryText.classList.add('victory');
+  itemContent.appendChild(victoryText);
+
+  //create item image in overlay
+  var itemImg = document.createElement('img');
+  itemImg.src = `Images/figure${crateIndex}.png`;
+  itemImg.style.width = '10vw';
+  itemImg.style.height = '15vw';
+  if (window.innerWidth < 800) {
+    itemImg.style.width = '20vw';
+    itemImg.style.height = '25vw';
+  }
+  itemImg.style.pointerEvents = 'none';
+  itemContent.appendChild(itemImg);
+
+  //create item name and details all randomise
+  var itemDetails = document.createElement('div');
+  itemDetails.style.textAlign = "center";
+  itemDetails.style.marginTop = "25px";
+  var itemName = document.createElement('h1');
+  //randomise name
+  const randomIndex = Math.floor(Math.random() * figureNames.length);
+  itemName.innerHTML = figureNames[randomIndex];
+  itemDetails.appendChild(itemName);
+  //randomise details
+  var itemDescription = document.createElement('p');
+  var valueamount = Math.floor(Math.random() * 5) + 1;
+  var qualityamount = Math.floor(Math.random() * 5) + 1;
+  var rarityamount = Math.floor(Math.random() * 5) + 1;
+  //randomise item details
+  var value = "$".repeat(valueamount);
+  var quality = "#".repeat(qualityamount);
+  var rarity = "R".repeat(rarityamount);
+  itemDescription.innerHTML = `
+    Value: ${value} <br>
+    Quality: ${quality} <br>
+    Rarity: ${rarity}
+  `;
+  itemDetails.appendChild(itemDescription);
+  itemContent.appendChild(itemDetails);
+
+  //create close button for content
+  var closeBtn = document.createElement('div');
+  closeBtn.classList.add('closeBtn');
+  closeBtn.innerHTML = "X";
+  itemContent.appendChild(closeBtn);
+  //#endregion
+
+  //add it to the array
+  allObjs.push(newBox);
+  grabbableObjs.push(newBox);
+  objSpace.appendChild(newDiv);
+}
+
+objSpace.addEventListener('click', (evt) => {
+  var sender = evt.target;
+  const overlayId = 'overlay-' + sender.id;
+  const overlay = document.getElementById(overlayId);
+  overlay.classList.add('shown');
+});
+
+document.addEventListener('click', (evt) => {
+  if (evt.target.classList.contains('closeBtn')) {
+    const overlay = evt.target.closest('.itemOverlay.shown');
+    if (overlay) {
+      if (overlay.classList.contains('won')) {
+        startScreen.style.opacity = 1;
+        startScreen.style.display = 'flex';
+        currentOpacity = parseFloat(startScreen.style.opacity) || 1;
+        gameStarted = false;
+        grabbableObjs.forEach(obj => {
+          obj.element.remove(); // Remove the element from the DOM
+        });
+        grabbableObjs.length = 0; // Clear grabbable objects
+        clearInterval(spawnInterval);
+        spawnInterval = null;
+      }
+      overlay.classList.remove('shown');
+
+    }
+  }
+});
 // Start animation loop
 
+function won(obj) {
+  const objId = obj.element.id;
+  const number = objId.split('-').pop();
+  const overlayId = 'overlay-new-id-' + number;
+  const overlay = document.getElementById(overlayId);
+  overlay.classList.add('won');
+  overlay.getElementsByClassName('victory')[0].style.display = 'block';
+  overlay.classList.add('shown');
+}
+
 animate();
+
+//when dragging resize bar in inspect browser mode
+window.onresize = function () {
+  location.reload();
+};
 
 //#endregion

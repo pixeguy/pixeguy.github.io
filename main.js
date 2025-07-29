@@ -1,6 +1,13 @@
 /* jshint esversion: 6 */
 
-
+const heightOutput = document.querySelector("#height");
+const widthOutput = document.querySelector("#width");
+function reportWindowSize() {
+heightOutput.textContent = window.innerHeight;
+widthOutput.textContent = window.innerWidth;
+}
+reportWindowSize();
+window.addEventListener("resize",reportWindowSize);
 //#region glitchText
 const resolver = {
   resolve: function resolve(options, callback) {
@@ -361,7 +368,6 @@ window.addEventListener('scroll', () => {
     }
   }
   cuttingImages();
-  console.log(cutcounter);
 }
 );
 

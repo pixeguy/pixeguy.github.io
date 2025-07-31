@@ -27,6 +27,29 @@ header {
   position: absolute;
 }
 
+#btnFS {
+  background-color: rgb(223, 223, 223);
+  border: 0;
+  border-radius: 50%;
+  position: fixed;
+  width: 5vw;
+  height: 5vw;
+  margin: 0 1vw 1vw 0;
+  right: 0;
+  bottom: 0;
+  transition: transform 0.5s;
+  z-index: 999;
+}
+
+#btnFS img {
+  width: 80%;
+  height: 80%;
+}
+
+#btnFS:hover {
+  transform: scale(1.2);
+}
+
 #subsection1,
 #subsection2,
 #subsection3,
@@ -74,6 +97,10 @@ header {
 
 #sub2 {
   background-image: url("Images/creepyFigurine.jpg");
+}
+
+#sub3 {
+  background-image: url("Images/minigame.png");
 }
 
 #prehistoryTimes {
@@ -696,15 +723,6 @@ ul {
   height: 50px;
 }
 
-.spawnArea {
-  background-color: rgb(225, 245, 169);
-  position: absolute;
-  width: 70%;
-  height: 30%;
-  top: 30%;
-  right: 0;
-}
-
 .Objects {
   position: absolute;
   width: 100%;
@@ -713,19 +731,19 @@ ul {
 }
 
 .clawActivate {
-  animation: fullClaw 1s steps(3, end) forwards;
+  animation: fullClaw 1s steps(3, jump-none) forwards;
 }
 
 .clawUnactive {
-  animation: fullClaw 1s steps(3, end) reverse both;
+  animation: fullClaw 1s steps(3, jump-none) reverse both;
 }
 
 .clawGrip {
-  animation: secondHalfClaw steps(2, end) forwards;
+  animation: secondHalfClaw steps(2, jump-none) forwards;
 }
 
 .clawOpen {
-  animation: secondHalfClaw steps(2, end) reverse both;
+  animation: secondHalfClaw steps(2, jump-none) reverse both;
 }
 
 @keyframes fullClaw {
@@ -849,8 +867,18 @@ ul {
 
 @media (max-width: 800px) {
 
-  p {
+  #btnFS {
+    display: none;
+  }
+
+  p,
+  body,
+  a {
     font-size: 0.8rem;
+  }
+
+  h1 {
+    font-size: 1rem;
   }
 
   #topMenu,
@@ -1076,9 +1104,18 @@ ul {
     left: -75%;
     background-color: rgb(226, 226, 226);
     height: 100vh;
-    width: 25%;
+    width: 35%;
     transition: left .5s;
     z-index: 998;
+  }
+
+  #hamburgerMenu ul {
+    list-style: none;
+    /* Removes bullet points */
+    padding: 0;
+    /* Removes default padding */
+    margin: 0;
+    display: block;
   }
 
   #hamburgerMenu.active {
@@ -1089,10 +1126,12 @@ ul {
     margin: 80px 0 0 0;
   }
 
+
+
   #hamburgerMenu li {
     list-style-type: none;
-    display: inline-block;
-    margin: 0 20px;
+    display: block;
+    margin: 0 10px 0 10px;
   }
 
   #hamburgerMenu li.active {
@@ -1176,7 +1215,7 @@ ul {
 
   .bannerText {
     text-align: center;
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 300;
     text-transform: uppercase;
     margin: 05rem 0rem 10rem;

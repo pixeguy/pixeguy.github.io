@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" type="image/png" href="Images/logo.png">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js" defer></script>
@@ -24,11 +27,11 @@
         </div>
         <nav class="container" id="topMenu">
             <ul>
-                <li><a href="#sub1">SubTopic1</a></li>
-                <li><a href="#sub2">SubTopic2</a></li>
+                <li><a href="#sub1">History</a></li>
+                <li><a href="#sub2">Figure Types</a></li>
                 <li><a href="#Home"><img src="Images/logo.png" alt="logo" width=70 height=70></a></li>
-                <li><a href="#sub3">SubTopic3</a></li>
-                <li><a href="#sub4">SubTopic4</a></li>
+                <li><a href="#sub3">Minigame</a></li>
+                <li><a href="#sub4">QR Code</a></li>
             </ul>
         </nav>
         <img src="Images/logo2.png" alt="logo" width=75 height=37>
@@ -41,6 +44,7 @@
                 <li><a class="menuBtn" href="#subsection4">SubTopic4</a></li>
             </ul>
         </nav>
+        <button id="btnFS"><img src="Images/fullscreen.png" alt="fullscreen"></button>
         <div id="topBar"></div>
         <div id="hamburger">
             <div class="">
@@ -52,11 +56,10 @@
         <div id="hamburgerMenu">
             <nav>
                 <ul>
-                    <li><a class="menuBtn" href="#Home">Home</a></li>
-                    <li><a class="menuBtn" href="#subsection1">SubTopic1</a></li>
-                    <li><a class="menuBtn" href="#subsection2">SubTopic2</a></li>
-                    <li><a class="menuBtn" href="#subsection3">SubTopic3</a></li>
-                    <li><a class="menuBtn" href="#sub4">SubTopic4</a></li>
+                    <li><a class="hamMenuBtn" href="#Home">Home</a></li>
+                    <li><a class="hamMenuBtn" href="#subsection1">History</a></li>
+                    <li><a class="hamMenuBtn" href="#subsection2">Figure Types</a></li>
+                    <li><a class="hamMenuBtn" href="#subsection3">Minigame</a></li>
                 </ul>
             </nav>
         </div>
@@ -453,6 +456,9 @@
             </div>
         </div>
         <div class="topicss">
+            <div class="parallax container subTopic" id="sub3">
+                <h1 class="fade-in bannerText typerText" data-typer="Minigame">AAA</h1>
+            </div>
             <section class="container gameContainer">
                 <h2>Win Some Figures!</h2>
                 <div id="gameDifficulty">
@@ -477,7 +483,6 @@
                 <div class="container" id="gameSpace">
                     <div id="gameScreen">
                         <div class="clawUnactive" id="claw"></div>
-                        <div class="spawnArea"></div>
                         <div class="floor"></div>
                         <div class="pit">
                             <img src="Images/pit.png" alt="pit" width="100" height="100">

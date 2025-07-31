@@ -1,5 +1,40 @@
 /* jshint esversion: 6 */
 
+//#region fullscreen button
+const btnFS = document.querySelector("#btnFS");
+
+btnFS.addEventListener("click", () => {
+  if (
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.mozFullScreenElement ||
+    document.msFullscreenElement
+  ) {
+    // Exit fullscreen
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  } else {
+    // Enter fullscreen
+    const docEl = document.documentElement;
+    if (docEl.requestFullscreen) {
+      docEl.requestFullscreen();
+    } else if (docEl.webkitRequestFullscreen) {
+      docEl.webkitRequestFullscreen();
+    } else if (docEl.mozRequestFullScreen) {
+      docEl.mozRequestFullScreen();
+    } else if (docEl.msRequestFullscreen) {
+      docEl.msRequestFullscreen();
+    }
+  }
+});
+//#endregion
 
 //#region glitchText
 const resolver = {
@@ -197,11 +232,10 @@ hamburger.addEventListener('click', () => {
 });
 
 const hamburgerBtns = document.getElementsByClassName("hamMenuBtn");
-
-for (let i = 5; i < hamburgerBtns.length; i++) {
+for (let i = 0; i < hamburgerBtns.length; i++) {
   const button = hamburgerBtns[i];
   hamburgerBtns[i].addEventListener('click', () => {
-    var current = document.querySelectorAll("#hamburgerMenu nav li.active");
+    var current = document.querySelectorAll("#hamburgerMenu nav ul li.active");
     if (current.length > 0) {
       current[0].classList.remove("active");
     }
@@ -335,17 +369,16 @@ window.addEventListener('scroll', () => {
 
   let threshold = 1.1;
   var current = document.querySelectorAll('.topicss.canShowSection');
-    const mainCover = document.getElementById("banner");
-    const fakeImg = document.querySelector('#Home > img');
-  if(progress >= 1)
-  {
+  const mainCover = document.getElementById("banner");
+  const fakeImg = document.querySelector('#Home > img');
+  if (progress >= 1) {
     mainCover.style.position = "absolute";
     fakeImg.style.display = "block";
   }
-  else{
+  else {
 
-        mainCover.style.position = "fixed";
-        fakeImg.style.display = "none";
+    mainCover.style.position = "fixed";
+    fakeImg.style.display = "none";
   }
   if (containerHalf <= (window.innerHeight / 2) * threshold) {
 
@@ -419,6 +452,7 @@ if (window.innerWidth <= 800) {
   const normalTypers = document.getElementsByClassName("typerText");
   normalTypers[0].innerHTML = "History Of Figures";
   normalTypers[1].innerHTML = "Types Of Figures";
+  normalTypers[2].innerHTML = "Minigame";
 }
 
 
@@ -456,6 +490,8 @@ radios.forEach(radio => {
     grabbableObjs.length = 0; // Clear grabbable objects
     clearInterval(spawnInterval);
     spawnInterval = null;
+    arcadeBG.pause();
+    arcadeBG.currentTime = 0;
   });
 });
 
@@ -496,7 +532,7 @@ const allObjs = [claw, floor, pitFloor, pitPillar];
 const grabbableObjs = [];
 
 allObjs.forEach(obj => {
-obj.updatePosition();
+  obj.updatePosition();
 })
 const gameArea = document.querySelectorAll(".topicss");
 gameArea[2].id = "subsection3";
@@ -509,6 +545,10 @@ let isGrabbing = false;
 let interceptedObj = null;
 let yOffset = 0;
 let xOffset = 0;
+const activateAudio = new Audio("audio/grab.ogg");
+const upAudio = new Audio("audio/grabup.ogg");
+const winAudio = new Audio("audio/win.ogg");
+const arcadeBG = new Audio("audio/arcadeBG.ogg");
 
 //store the interval spawn thing
 let spawnInterval = null;
@@ -563,11 +603,7 @@ function animate() {
     claw.x = xresult;
     claw.y = yresult;
 
-    //if is grabbed follow claw
-    if (isGrabbed) {
-      grabbedObj.x = claw.x + xOffset;
-      grabbedObj.y = claw.y + yOffset;
-    }
+
 
     //apply gravity to grabbable objects
     for (let i = 0; i < grabbableObjs.length; i++) {
@@ -575,7 +611,11 @@ function animate() {
       obj.velocityY += obj.gravity;
       obj.y += obj.velocityY;
     }
-
+    //if is grabbed follow claw
+    if (isGrabbed) {
+      grabbedObj.x = claw.x + xOffset;
+      grabbedObj.y = claw.y + yOffset;
+    }
     //grabbable objects collide with each other
     for (let i = 0; i < grabbableObjs.length; i++) {
       for (let j = i + 1; j < grabbableObjs.length; j++) {
@@ -666,6 +706,9 @@ function animate() {
         startScreen.classList.remove('started');
         startScreen.style.display = 'none';
         gameStarted = true;
+        gameWon = false;
+        arcadeBG.loop = true;
+        arcadeBG.play();
         if (spawnInterval == null) {
           //call it once the moment game starts then interval it
           Spawn();
@@ -707,6 +750,7 @@ function MovePos(leftInc, topInc) {
 function ActivateClaw() {
   clawActive = true;
   targetY = 500;
+  activateAudio.play();
 
   claw.element.classList.remove('clawUnactive');
   void claw.element.offsetWidth; // force reflow to restart animation
@@ -719,6 +763,7 @@ function ActivateClaw() {
     claw.element.classList.add('clawGrip');
     setTimeout(() => {
       targetY = 0;
+      upAudio.play();
       for (const obj of grabbableObjs) {
         if (AABB(obj, claw)) {
           if (Math.abs((obj.x + obj.width / 2) - (claw.x + claw.width / 2)) < 30) {
@@ -772,16 +817,15 @@ document.addEventListener('keydown', (e) => {
       //test.y -= 100;
       MovePos(0, 10);
       break;
-    case "KeyE":
-      Spawn();
-      break;
   }
 });
 
 ["buttons1", "buttons2", "buttons3"].forEach((className, index) => {
   document.querySelector(`.${className}`).addEventListener("click", () => {
     if (index === 0) {
-      ActivateClaw();
+      if (gameStarted) {
+        ActivateClaw();
+      }
     }
     else if (index === 1) {
       MovePos(-10, 0);
@@ -956,7 +1000,6 @@ document.addEventListener('click', (evt) => {
     }
   }
 });
-// Start animation loop
 
 function won(obj) {
   const objId = obj.element.id;
@@ -966,13 +1009,12 @@ function won(obj) {
   overlay.classList.add('won');
   overlay.getElementsByClassName('victory')[0].style.display = 'block';
   overlay.classList.add('shown');
+  winAudio.play();
+  arcadeBG.pause();
+  arcadeBG.currentTime = 0;
 }
 
+// Start animation loop
 animate();
-
-//when dragging resize bar in inspect browser mode
-window.onresize = function () {
-  location.reload();
-};
 
 //#endregion

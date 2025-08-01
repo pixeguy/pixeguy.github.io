@@ -313,6 +313,23 @@ document.querySelector('#fakeMenu').addEventListener('click', function (event) {
   }
   // Find the section with the corresponding id
   const section = document.querySelector(event.target.getAttribute('href'));
+  if (event.target.getAttribute('href') != "#subsection3");
+  {
+    startScreen.style.opacity = 1;
+    startScreen.style.display = 'flex';
+    currentOpacity = parseFloat(startScreen.style.opacity) || 1;
+    gameStarted = false;
+    grabbableObjs.forEach(function (obj) {
+      obj.element.remove(); // Remove the element from the DOM
+    });
+    grabbableObjs.length = 0; // Clear grabbable objects
+    clearInterval(spawnInterval);
+    spawnInterval = null;
+    arcadeBG.pause();
+    arcadeBG.currentTime = 0;
+    targetX = targetY = 0;
+    claw.x = claw.y = 0;
+  }
   if (section) {
     // Add a class to make the section visible
     section.classList.add("canShowSection");
@@ -328,6 +345,23 @@ document.querySelector('#hamburgerMenu').addEventListener('click', function (eve
   }
   // Find the section with the corresponding id
   const section = document.querySelector(event.target.getAttribute('href'));
+    if (event.target.getAttribute('href') != "#subsection3");
+  {
+    startScreen.style.opacity = 1;
+    startScreen.style.display = 'flex';
+    currentOpacity = parseFloat(startScreen.style.opacity) || 1;
+    gameStarted = false;
+    grabbableObjs.forEach(function (obj) {
+      obj.element.remove(); // Remove the element from the DOM
+    });
+    grabbableObjs.length = 0; // Clear grabbable objects
+    clearInterval(spawnInterval);
+    spawnInterval = null;
+    arcadeBG.pause();
+    arcadeBG.currentTime = 0;
+    targetX = targetY = 0;
+    claw.x = claw.y = 0;
+  }
   if (section) {
     // Add a class to make the section visible
     section.classList.add("canShowSection");
@@ -481,7 +515,6 @@ let difficulty = 'Medium'; // default difficulty
 radios.forEach(function (radio) {
   radio.addEventListener('change', function () {
     difficulty = document.querySelector(`label[for="${radio.id}"]`).textContent;
-    console.log(`Difficulty set to: ${difficulty}`);
     startScreen.style.opacity = 1;
     startScreen.style.display = 'flex';
     currentOpacity = parseFloat(startScreen.style.opacity) || 1;

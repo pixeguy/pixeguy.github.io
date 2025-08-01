@@ -1,9 +1,7 @@
-/* jshint esversion: 6 */
-
 //#region fullscreen button
 const btnFS = document.querySelector("#btnFS");
 
-btnFS.addEventListener("click", () => {
+btnFS.addEventListener("click", function () {
   if (
     document.fullscreenElement ||
     document.webkitFullscreenElement ||
@@ -43,6 +41,7 @@ const resolver = {
     const resolveString = options.resolveString || options.element.getAttribute('data-target-resolver');
     const combinedOptions = Object.assign({}, options, { resolveString: resolveString });
 
+    //randomise character by number
     function getRandomInteger(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -51,6 +50,7 @@ const resolver = {
       return characters[getRandomInteger(0, characters.length - 1)];
     }
 
+    //randomise the character constnatly until max amount of iterations then force it to be the correct character
     function doRandomiserEffect(options, callback) {
       const characters = options.characters;
       const element = options.element;
@@ -58,7 +58,7 @@ const resolver = {
 
       let iterations = options.iterations;
 
-      setTimeout(() => {
+      setTimeout(function () {
         if (iterations >= 0) {
           const nextOptions = Object.assign({}, options, { iterations: iterations - 1 });
 
@@ -77,13 +77,14 @@ const resolver = {
       }, options.timeout);
     }
 
+    //repeat the randomiser for each chracter for the whole string, else move to the next string.
     function doResolverEffect(options, callback) {
       const resolveString = options.resolveString;
       const offset = options.offset;
       const partialString = resolveString.substring(0, offset);
       const combinedOptions = Object.assign({}, options, { partialString: partialString });
 
-      doRandomiserEffect(combinedOptions, () => {
+      doRandomiserEffect(combinedOptions, function () {
         const nextOptions = Object.assign({}, options, { offset: offset + 1 });
 
         if (offset <= resolveString.length) {
@@ -127,9 +128,9 @@ const options = {
   element: document.querySelector('[data-target-resolver]')
 };
 
-// Callback function when resolve completes
+// Callback function() when resolve completes
 function callback() {
-  setTimeout(() => {
+  setTimeout(function () {
     counter++;
 
     if (counter >= strings.length) {
@@ -141,10 +142,12 @@ function callback() {
   }, 1000);
 }
 
+//calls the whole thing to get it started
 resolver.resolve(options, callback);
 //#endregion
 
 //#region drawing logo
+//draw left fin
 const logoL = document.getElementById('logoleft');
 const logoLctx = logoL.getContext('2d');
 logoLctx.fillStyle = 'black';
@@ -156,6 +159,7 @@ logoLctx.moveTo(0, 0);
 logoLctx.stroke();
 logoLctx.fill();
 
+//draw right fin
 const logoR = document.getElementById('logoright');
 const logoRctx = logoR.getContext('2d');
 logoRctx.fillStyle = 'black';
@@ -169,6 +173,7 @@ logoRctx.lineTo(150, 0);
 logoRctx.stroke();
 logoRctx.fill();
 
+//draw middle red gem
 const logo = document.getElementById('logo');
 const logoctx = logo.getContext('2d');
 logoctx.fillStyle = 'red';
@@ -186,12 +191,15 @@ logoctx.fill();
 
 //#region fade in screen (intersection observer)
 const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
+  function (entries) {
+    //for each entry then intersects the window
+    entries.forEach(function (entry) {
       if (entry.isIntersecting) {
         //responsive for mobile
+        //skip creating objects for mobile since it wont use the effect
         if (window.innerWidth > 800) {
           //find all elements that need typing effect and call them
+          //this is to create objects for simpler typer effect
           if (entry.target.hasAttribute('data-typer')) {
             const typeroptions = {
               timeout: 70,
@@ -218,23 +226,25 @@ const observer = new IntersectionObserver(
 
 const tags = document.querySelectorAll('.fade-in');
 
-tags.forEach((tag) => {
+tags.forEach(function (tag) {
   observer.observe(tag);
 });
 //#endregion
 
 //#region bunch o button click events
+//find the buttons and the menu itself to toggle classes
 const hamburger = document.querySelector("#hamburger>div");
 const hamburgermenu = document.querySelector("#hamburgerMenu");
-hamburger.addEventListener('click', () => {
+hamburger.addEventListener('click', function () {
   hamburger.classList.toggle('active');
   hamburgermenu.classList.toggle('active');
 });
 
+//find each button that has the active class and remove it so to add active class to new one
 const hamburgerBtns = document.getElementsByClassName("hamMenuBtn");
 for (let i = 0; i < hamburgerBtns.length; i++) {
   const button = hamburgerBtns[i];
-  hamburgerBtns[i].addEventListener('click', () => {
+  hamburgerBtns[i].addEventListener('click', function () {
     var current = document.querySelectorAll("#hamburgerMenu nav ul li.active");
     if (current.length > 0) {
       current[0].classList.remove("active");
@@ -250,7 +260,7 @@ for (let i = 0; i < sub2Btns.length; i++) {
   const btn = sub2Btns[i];
   const cnt = sub2Cnt[i];
 
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', function () {
     const current = document.getElementsByClassName("sub2Btn active");
     const currentCnt = document.querySelectorAll(".sub2Content.sub2Show");
 
@@ -270,14 +280,14 @@ for (let i = 0; i < imageGalleryBtns.length; i++) {
   const btn = imageGalleryBtns[i];
   const overlay = imageGalleryOverlay[i];
 
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', function () {
     overlay.classList.add('sub2Show');
   });
 }
 
 const exitBtn = document.getElementsByClassName("exitBtn");
 for (let i = 0; i < exitBtn.length; i++) {
-  exitBtn[i].addEventListener('click', () => {
+  exitBtn[i].addEventListener('click', function () {
     var current = document.querySelectorAll('.sub2Overlay.sub2Show');
     if (current.length > 0) {
       current[0].classList.remove("sub2Show");
@@ -291,7 +301,7 @@ let currentOpacity = parseFloat(startScreen.style.opacity) || 1;
 let gameStarted = false;
 let gameWon = false;
 let clawActive = false;
-startBtn.addEventListener('click', () => {
+startBtn.addEventListener('click', function () {
   startScreen.classList.add('started');
 });
 
@@ -333,42 +343,40 @@ document.querySelector('#hamburgerMenu').addEventListener('click', function (eve
 //#region history image changer (scroll Event)
 const historyContent = document.getElementsByClassName("historyLayout");
 const parallaxContent = document.querySelectorAll('#parallaxfinder .parallax');
-window.addEventListener('scroll', () => {
-  const scrollEnd = 750; //750 for game
+window.addEventListener('scroll', function () {
+  //ends by the first parallax section if im not wrong
+  const scrollEnd = 750;
   let scrollY = window.scrollY;
   let progress = (scrollY / scrollEnd); //scrolled divided by range
   progress = Math.max(0, Math.min(progress, 1));
 
   let yRange = 0;
   let yThreshold = 0;
-  if (window.innerWidth > 800) {
-    yRange = 279;
-  }
-  else {
-    yRange = 236;
-    yThreshold = 0;
-  }
   let screenHeight = window.innerHeight;
+  //change range and threshold depending on viewport size
   yRange = 0.4983 * screenHeight - 202.4;
   yThreshold = -0.3344 * screenHeight + 1325;
 
+  //move the logo up and transparent to fade in to the menu relatively to the scroll progress
   const logoText = document.querySelector('.bannerText');
   const logo = document.querySelector('#bannerDrawing');
   const menulogo = document.querySelector('#topMenu li:nth-of-type(3) a');
   logo.style.transform = "translateY(-" + (progress * yRange) + "px)";
-  //279
+
   let scaleX = 1 - 0.75 * progress;
   let scaleY = 1 - 0.75 * progress;
   logo.style.transform += "scale(-" + (scaleX) + "," + (scaleY) + ")";
 
   logoText.style.opacity = 1 - (progress * 2.5);
   menulogo.style.opacity = 1 - (progress);
+
   const prehistoricContainer = historyContent[0];
   const containerMiddle = (prehistoricContainer.getBoundingClientRect().top - prehistoricContainer.getBoundingClientRect().bottom) / 2;
   const containerHalf = prehistoricContainer.getBoundingClientRect().top - containerMiddle;
 
+  //if scroll past 750, take away the logo and text so it wont block button inputs,
+  //show fake image to give illusion of smooth logo transition
   let threshold = 1.1;
-  var current = document.querySelectorAll('.topicss.canShowSection');
   const mainCover = document.getElementById("banner");
   const fakeImg = document.querySelector('#Home > img');
   if (progress >= 1) {
@@ -380,6 +388,8 @@ window.addEventListener('scroll', () => {
     mainCover.style.position = "fixed";
     fakeImg.style.display = "none";
   }
+
+  //if the first subtopic container is past half of the screen height, position to fixed else, if go back up, unfix it
   if (containerHalf <= (window.innerHeight / 2) * threshold) {
 
     for (const content of historyContent) {
@@ -394,12 +404,12 @@ window.addEventListener('scroll', () => {
     }
   }
   cuttingImages();
-  console.log(cutcounter);
 }
 );
 
 let cutcounter = 0;
 function cuttingImages() {
+  //get the correct elements depending on how far the user has scrolled/cut
   let section1 = historyContent[cutcounter];
   let parallax2 = parallaxContent[cutcounter + 1];
   let section2 = historyContent[cutcounter + 1];
@@ -408,6 +418,7 @@ function cuttingImages() {
     parallax2 = document.getElementById("sub2");
     section2 = document.getElementById("empty");
   }
+  //calculate how much each section have passed the next parallax background, the inset depending on that progress
   let image1Top = section1.getBoundingClientRect().top;
   let section2Top = parallax2.getBoundingClientRect().top;
   let progress = (image1Top - section2Top) / -window.innerHeight;
@@ -430,6 +441,8 @@ const typerResolver = {
     const { resolveString, typerElement, timeout } = options;
     let offset = 0;
     let called = false;
+    //resolve is called earlier, this happens whenever a new one is made when user scrolls pass
+    // loops through all the characters, updating the textcontent with the next character
     function typeNextChar() {
       if (offset === 0) {
         called = true;
@@ -448,6 +461,7 @@ const typerResolver = {
   }
 };
 
+//if mobile, change their innerHTML to work normally
 if (window.innerWidth <= 800) {
   const normalTypers = document.getElementsByClassName("typerText");
   normalTypers[0].innerHTML = "History Of Figures";
@@ -458,33 +472,25 @@ if (window.innerWidth <= 800) {
 
 //#endregion
 
-//#region stupid stupid height
-//stupidest way to do this ever
-const stupidContainer = document.querySelector(".wcontainer");
-const stupidChild = stupidContainer.querySelector("#sub2Container");
-const resizeObserver = new ResizeObserver(() => {
-  stupidContainer.style.height = (stupidChild.getBoundingClientRect().height + 80) + "px";
-});
-resizeObserver.observe(stupidChild);
-//#endregion
-
 //#region game
 
+//variables for player
 let targetX = 0, targetY = 0;// target position
 let Xspeed = 3;
 let Yspeed = 0.9;
 
+//if player restarts by choosing new difficulty
 const radios = document.querySelectorAll('input[name="difficulty"]');
 let difficulty = 'Medium'; // default difficulty
-radios.forEach(radio => {
-  radio.addEventListener('change', () => {
+radios.forEach(function (radio) {
+  radio.addEventListener('change', function () {
     difficulty = document.querySelector(`label[for="${radio.id}"]`).textContent;
     console.log(`Difficulty set to: ${difficulty}`);
     startScreen.style.opacity = 1;
     startScreen.style.display = 'flex';
     currentOpacity = parseFloat(startScreen.style.opacity) || 1;
     gameStarted = false;
-    grabbableObjs.forEach(obj => {
+    grabbableObjs.forEach(function (obj) {
       obj.element.remove(); // Remove the element from the DOM
     });
     grabbableObjs.length = 0; // Clear grabbable objects
@@ -495,6 +501,7 @@ radios.forEach(radio => {
   });
 });
 
+//class for ANY object in this game
 class box {
   constructor(x, y, width, height, element = null) {
     this.element = element;
@@ -515,6 +522,7 @@ class box {
     }
   }
 }
+//preset objects, not including objects spawned in runtime
 const Gscreen = document.querySelector("#gameScreen");
 const screenWidth = Gscreen.getBoundingClientRect().width;
 const screenHeight = Gscreen.getBoundingClientRect().height;
@@ -531,9 +539,10 @@ var id = 0;
 const allObjs = [claw, floor, pitFloor, pitPillar];
 const grabbableObjs = [];
 
-allObjs.forEach(obj => {
+//update everyones position first before adding ID to the section, so that the game doesnt break
+allObjs.forEach(function (obj) {
   obj.updatePosition();
-})
+});
 const gameArea = document.querySelectorAll(".topicss");
 gameArea[2].id = "subsection3";
 
@@ -595,7 +604,7 @@ function resolveAABB(objA, objB) {
 // Update loop using requestAnimationFrame
 function animate() {
   if (gameStarted) {
-    grabbableObjs.sort((a, b) => a.y - b.y); //sort by y position so collision works properly
+    grabbableObjs.sort(function (a, b) { return a.y - b.y; }); //sort by y position so collision works properly
 
     //actual claw movement
     const xresult = moveToward(claw.x, targetX, Xspeed);
@@ -644,7 +653,7 @@ function animate() {
       }
     }
 
-    grabbableObjs.forEach(obj => {
+    grabbableObjs.forEach(function (obj) {
       if (typeof obj.updatePosition === 'function') {
         if (obj != floor) {
           if (AABB(obj, floor)) {
@@ -659,7 +668,7 @@ function animate() {
   }
 
   //collide everything with floor
-  allObjs.forEach(obj => {
+  allObjs.forEach(function (obj) {
     if (typeof obj.updatePosition === 'function') {
       if (obj != floor) {
         if (AABB(obj, floor)) {
@@ -699,7 +708,7 @@ function animate() {
 
   //#region startscreen
   if (startScreen.classList.contains('started')) {
-    setTimeout(() => {
+    setTimeout(function () {
       currentOpacity = moveToward(currentOpacity, 0, 0.005); // Adjust speed if needed
       startScreen.style.opacity = currentOpacity;
       if (startScreen.style.opacity <= 0.05) {
@@ -723,11 +732,6 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-function ResetPos() {
-  claw.x = claw.y = targetX = targetY = 0;
-  UpdateBallStyle();
-}
-
 //lerping to target for claw machine (moving claw x y to target)
 function moveToward(value, target, speed) {
   const delta = target - value;
@@ -742,12 +746,14 @@ function moveToward(value, target, speed) {
   return value;
 }
 
+//move target, dont move the actual claw so that claw can interpolate to the target
 function MovePos(leftInc, topInc) {
   targetX += leftInc;
   targetY += topInc;
 }
 
 function ActivateClaw() {
+  //activate claw
   clawActive = true;
   targetY = 500;
   activateAudio.play();
@@ -756,12 +762,14 @@ function ActivateClaw() {
   void claw.element.offsetWidth; // force reflow to restart animation
   claw.element.classList.add('clawActivate');
   isGrabbing = true;
-  setTimeout(() => {
+  setTimeout(function () {
+    //claw closing
     isGrabbing = false;
     claw.element.classList.remove('clawActivate');
     void claw.element.offsetWidth; // force restart again
     claw.element.classList.add('clawGrip');
-    setTimeout(() => {
+    setTimeout(function () {
+      //claw going back up
       targetY = 0;
       upAudio.play();
       for (const obj of grabbableObjs) {
@@ -774,9 +782,11 @@ function ActivateClaw() {
           }
         }
       }
-      setTimeout(() => {
+      setTimeout(function () {
+        //claw go back to spawn
         targetX = 0;
-        setTimeout(() => {
+        setTimeout(function () {
+          //claw open to release any objects
           claw.element.classList.remove('clawGrip');
           void claw.element.offsetWidth; // force reflow to restart animation
           claw.element.classList.add('clawOpen');
@@ -784,7 +794,8 @@ function ActivateClaw() {
             isGrabbed = false;
             grabbedObj.velocityY = 0;
           }
-          setTimeout(() => {
+          setTimeout(function () {
+            //claw go back to unactive
             clawActive = false;
             claw.element.classList.remove('clawOpen');
             void claw.element.offsetWidth;
@@ -799,7 +810,7 @@ function ActivateClaw() {
   }, 3000);
 }
 
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', function (e) {
   if (!gameStarted) return; // Ignore key events if game hasn't started
   if (clawActive) return;
   switch (e.code) {
@@ -820,8 +831,8 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-["buttons1", "buttons2", "buttons3"].forEach((className, index) => {
-  document.querySelector(`.${className}`).addEventListener("click", () => {
+["buttons1", "buttons2", "buttons3"].forEach(function (className, index) {
+  document.querySelector(`.${className}`).addEventListener("click", function () {
     if (index === 0) {
       if (gameStarted) {
         ActivateClaw();
@@ -866,6 +877,7 @@ function Spawn() {
   newDiv.id = 'new-id-' + (id++); //increment id
   let range = 0;
   let rangeEnd = 0;
+  //change the range of sizes of the boxes depending on difficulty of the game
   if (difficulty === 'Easy') {
     console.log(difficulty);
     range = screenWidth * 0.07;
@@ -881,6 +893,7 @@ function Spawn() {
     range = screenWidth * 0.03;
     rangeEnd = screenWidth * 0.04;
   }
+  //randomize spawn size depending on the range of size from difficulty
   let randomX = Math.random() * (rangeEnd - range) + range;
   let randomY = Math.random() * (rangeEnd - range) + range;
   newDiv.style.width = randomX + 'px';
@@ -888,7 +901,7 @@ function Spawn() {
   newDiv.style.position = 'absolute';
   newDiv.style.pointerEvents = 'auto';
 
-  //create image for the object
+  //create box image for the object
   var newImg = document.createElement('img');
   const crateIndex = Math.floor(Math.random() * 3) + 1; // 1 to 3
   newImg.src = `Images/crate${crateIndex}.png`;
@@ -972,14 +985,16 @@ function Spawn() {
   objSpace.appendChild(newDiv);
 }
 
-objSpace.addEventListener('click', (evt) => {
+//show overlay for each item when normally clicked
+objSpace.addEventListener('click', function (evt) {
   var sender = evt.target;
   const overlayId = 'overlay-' + sender.id;
   const overlay = document.getElementById(overlayId);
   overlay.classList.add('shown');
 });
 
-document.addEventListener('click', (evt) => {
+//close the overlay when x Button pressed, but if the game is won, restart the game when pressed
+document.addEventListener('click', function (evt) {
   if (evt.target.classList.contains('closeBtn')) {
     const overlay = evt.target.closest('.itemOverlay.shown');
     if (overlay) {
@@ -988,7 +1003,7 @@ document.addEventListener('click', (evt) => {
         startScreen.style.display = 'flex';
         currentOpacity = parseFloat(startScreen.style.opacity) || 1;
         gameStarted = false;
-        grabbableObjs.forEach(obj => {
+        grabbableObjs.forEach(function (obj) {
           obj.element.remove(); // Remove the element from the DOM
         });
         grabbableObjs.length = 0; // Clear grabbable objects
@@ -1001,6 +1016,7 @@ document.addEventListener('click', (evt) => {
   }
 });
 
+//show a slightlyyy different overlay when the game is won
 function won(obj) {
   const objId = obj.element.id;
   const number = objId.split('-').pop();

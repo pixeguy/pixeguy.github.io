@@ -1,8 +1,14 @@
+@font-face {
+  font-family: myFirstFont;
+  src: url("fonts/ShareTechMono-Regular.ttf");
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Unica One', sans-serif;
+  font-family: myFirstFont;
+  font-size: 16px;
   color: #111;
   z-index: 1;
   scroll-behavior: smooth;
@@ -11,7 +17,7 @@
 header {
   width: 100%;
   height: 100vh;
-  background-image: url("Images/Banner(1).png");
+  background-image: url("Images/Banner(1).jpg");
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
@@ -100,20 +106,20 @@ header {
 }
 
 #sub3 {
-  background-image: url("Images/minigame.png");
+  background-image: url("Images/minigame.jpg");
 }
 
 #prehistoryTimes {
-  background-image: url("Images/prehistory.png");
+  background-image: url("Images/prehistory.jpg");
 }
 
 #ironAge {
-  background-image: url("Images/ironage.png");
+  background-image: url("Images/ironage.jpg");
   z-index: -1;
 }
 
 #modernEra {
-  background-image: url("Images/starwarsaction.png");
+  background-image: url("Images/starwarsaction.jpg");
   z-index: -1;
 }
 
@@ -677,21 +683,6 @@ ul {
   height: 100%;
 }
 
-#claw {
-  position: absolute;
-  background-image: url('Images/claw.png');
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: contain;
-  /* optional, ensures image fits */
-  background-color: rgb(245, 140, 140);
-  /* size of one frame */
-  width: 8.6vw;
-  height: 15.5vh;
-  /* size of the whole sheet */
-  background-size: 480px 150px;
-}
-
 .pit {
   position: absolute;
   width: 100%;
@@ -717,7 +708,7 @@ ul {
 }
 
 .floor {
-  background-color: rgb(245, 169, 169);
+  background-color: rgba(245, 169, 169, 0);
   position: absolute;
   width: 100%;
   height: 50px;
@@ -730,26 +721,43 @@ ul {
   pointer-events: none;
 }
 
+#claw {
+  position: absolute;
+  background-image: url('Images/claw.png');
+  background-repeat: no-repeat;
+  /* optional, ensures image fits */
+  background-color: rgb(245, 140, 140);
+  /* size of one frame */
+  width: 8.6vw;
+  height: 15.5vh;
+  /* size of the whole sheet */
+  background-size: 480px 150px;
+}
+
 .clawActivate {
-  animation: fullClaw 1s steps(3, jump-none) forwards;
+  animation: fullClaw 1s steps(1) forwards;
 }
 
 .clawUnactive {
-  animation: fullClaw 1s steps(3, jump-none) reverse both;
+  animation: fullClaw 1s steps(1) reverse both;
 }
 
 .clawGrip {
-  animation: secondHalfClaw steps(2, jump-none) forwards;
+  animation: secondHalfClaw steps(2) forwards;
 }
 
 .clawOpen {
-  animation: secondHalfClaw steps(2, jump-none) reverse both;
+  animation: secondHalfClaw steps(2) reverse both;
 }
 
 @keyframes fullClaw {
   from {
     /* first frame */
     background-position: 0px 0px;
+  }
+
+  50% {
+    background-position: -160px 0px;
   }
 
   to {
@@ -900,7 +908,7 @@ ul {
   header {
     width: 100%;
     height: 100vh;
-    background-image: url("Images/Banner(1).png");
+    background-image: none;
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
@@ -1453,4 +1461,7 @@ ul {
     height: 16vw;
   }
 
+  #claw {
+    background-image: none;
+  }
 }

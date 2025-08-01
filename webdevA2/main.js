@@ -494,6 +494,8 @@ radios.forEach(function (radio) {
     spawnInterval = null;
     arcadeBG.pause();
     arcadeBG.currentTime = 0;
+    targetX = targetY = 0;
+    claw.x = claw.y = 0;
   });
 });
 
@@ -816,19 +818,12 @@ document.addEventListener('keydown', function (e) {
     case "ArrowLeft":
       MovePos(-10, 0);
       break;
-    case "ArrowUp":
-      //test.y -= 100;
-      MovePos(0, -10);
-      break;
-    case "ArrowDown":
-      //test.y -= 100;
-      MovePos(0, 10);
-      break;
   }
 });
 
 ["buttons1", "buttons2", "buttons3"].forEach(function (className, index) {
   document.querySelector(`.${className}`).addEventListener("click", function () {
+    if (clawActive) return;
     if (index === 0) {
       if (gameStarted) {
         ActivateClaw();
@@ -1005,6 +1000,9 @@ document.addEventListener('click', function (evt) {
         grabbableObjs.length = 0; // Clear grabbable objects
         clearInterval(spawnInterval);
         spawnInterval = null;
+        targetX = targetY = 0;
+        claw.x = claw.y = 0;
+
       }
       overlay.classList.remove('shown');
 

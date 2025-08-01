@@ -307,8 +307,6 @@ startBtn.addEventListener('click', function () {
 
 // Get the parent container of all the navigation buttons
 document.querySelector('#fakeMenu').addEventListener('click', function (event) {
-  // Prevent the default anchor behavior (scrolling to the section)
-  event.preventDefault();
   var current = document.querySelectorAll('.topicss.canShowSection');
   if (current.length > 0) {
     current[0].classList.remove('canShowSection');
@@ -324,8 +322,6 @@ document.querySelector('#fakeMenu').addEventListener('click', function (event) {
 
 // Get the parent container of all the navigation buttons
 document.querySelector('#hamburgerMenu').addEventListener('click', function (event) {
-  // Prevent the default anchor behavior (scrolling to the section)
-  event.preventDefault();
   var current = document.querySelectorAll('.topicss.canShowSection');
   if (current.length > 0) {
     current[0].classList.remove('canShowSection');

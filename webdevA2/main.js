@@ -1070,14 +1070,14 @@ window.addEventListener("beforeinstallprompt", function(event) {
   installButton.classList.remove("hidden");}
 });
 
-installButton.addEventListener("click", () => {
-  if (!installPrompt) {
-    return;
-  }
-  //const result = await installPrompt.prompt();
-  //console.log(`Install prompt was: ${result.outcome}`);
-  installPrompt = null;
-  installButton.setAttribute("hidden", "");
+installButton.addEventListener("click", function() {
+  if (!installPrompt) return;
+
+  installPrompt.prompt().then(function(result) {
+    console.log(`Install prompt was: ${result.outcome}`);
+    installPrompt = null;
+    installButton.setAttribute("hidden", "");
+  });
 });
 
 //#endregion

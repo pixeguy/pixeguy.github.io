@@ -1066,6 +1066,7 @@ const installButton = document.querySelector("#install");
 window.addEventListener("beforeinstallprompt", function(event) {
   event.preventDefault();
   if(window.innerWidth <= 800){
+    alert("seem");
   installPrompt = event;
   installButton.classList.remove("hidden");}
 });

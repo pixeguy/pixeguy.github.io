@@ -1063,10 +1063,10 @@ animate();
 let installPrompt = null;
 const installButton = document.querySelector("#install");
 
-  alert("OI");
 window.addEventListener("beforeinstallprompt", function(event) {
   event.preventDefault();
   if(window.innerWidth <= 800){
+  alert("OI");
   installPrompt = event;
   installButton.classList.remove("hidden");}
 });

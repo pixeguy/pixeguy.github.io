@@ -1070,7 +1070,7 @@ window.addEventListener("beforeinstallprompt", function(event) {
   installButton.classList.remove("hidden");}
 });
 
-installButton.addEventListener("click", async function() {
+installButton.addEventListener("click", async () => {
   if (!installPrompt) {
     return;
   }

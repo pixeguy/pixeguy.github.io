@@ -1060,4 +1060,24 @@ function won(obj) {
 // Start animation loop
 animate();
 
+let installPrompt = null;
+const installButton = document.querySelector("#install");
+
+window.addEventListener("beforeinstallprompt", function(event) {
+  event.preventDefault();
+  if(window.innerWidth <= 800){
+  installPrompt = event;
+  installButton.classList.remove("hidden");}
+});
+
+installButton.addEventListener("click", async () => {
+  if (!installPrompt) {
+    return;
+  }
+  const result = await installPrompt.prompt();
+  console.log(`Install prompt was: ${result.outcome}`);
+  installPrompt = null;
+  installButton.setAttribute("hidden", "");
+});
+
 //#endregion

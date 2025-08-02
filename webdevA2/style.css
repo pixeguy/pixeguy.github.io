@@ -33,6 +33,10 @@ header {
   position: absolute;
 }
 
+.hidden {
+  display:none;
+}
+
 #btnFS {
   background-color: rgb(223, 223, 223);
   border: 0;

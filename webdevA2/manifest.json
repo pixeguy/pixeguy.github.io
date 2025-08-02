@@ -1,6 +1,6 @@
 {
-  "name": "About Figures",
-  "short_name": "Figures!",
+  "name": "Figures Demo PWA",
+  "short_name": "Figures PWA!",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",

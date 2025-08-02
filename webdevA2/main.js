@@ -1070,12 +1070,12 @@ window.addEventListener("beforeinstallprompt", function(event) {
   installButton.classList.remove("hidden");}
 });
 
-installButton.addEventListener("click", async () => {
+installButton.addEventListener("click", () => {
   if (!installPrompt) {
     return;
   }
-  const result = await installPrompt.prompt();
-  console.log(`Install prompt was: ${result.outcome}`);
+  //const result = await installPrompt.prompt();
+  //console.log(`Install prompt was: ${result.outcome}`);
   installPrompt = null;
   installButton.setAttribute("hidden", "");
 });
